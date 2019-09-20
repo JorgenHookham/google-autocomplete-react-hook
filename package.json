@@ -1,0 +1,32 @@
+{
+  "name": "google-autocomplete-react-hook",
+  "version": "1.0.1",
+  "description": "A react hook wrapper for the google maps location autocomplete api.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JorgenHookham/google-autocomplete-react-hook.git"
+  },
+  "author": "Jorgen Hookham <jorgen@hookham.co>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JorgenHookham/google-autocomplete-react-hook/issues"
+  },
+  "homepage": "https://github.com/JorgenHookham/google-autocomplete-react-hook",
+  "dependencies": {
+    "load-google-maps-api": "^2.0.1",
+    "react": "^16.9.0"
+  },
+  "devDependencies": {
+    "@types/googlemaps": "^3.37.7",
+    "@types/load-google-maps-api": "^2.0.0",
+    "@types/react": "^16.9.2",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0"
+  }
+}
