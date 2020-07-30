@@ -5,7 +5,8 @@ import {
 } from "./errors";
 
 interface useGoogleLocationAutocompleteReturn {
-  getPlacePredictions: (request: google.maps.places.AutocompletionRequest) => Promise<google.maps.places.AutocompletePrediction[]>;
+  getPlacePredictions: (request: google.maps.places.AutocompletionRequest) => Promise<google.maps.places.AutocompletePrediction[]>
+  geocode: (request: google.maps.GeocoderRequest) => Promise<google.maps.GeocoderResult[]>
 }
 
 const useGoogleLocationAutocomplete = (GoogleMapsAPIKey: string): useGoogleLocationAutocompleteReturn => {
@@ -22,6 +23,10 @@ const useGoogleLocationAutocomplete = (GoogleMapsAPIKey: string): useGoogleLocat
     autocompleteService,
     setAutocompleteService
   ] = useState<google.maps.places.AutocompleteService>();
+  const [
+    geocoderService,
+    setGeocoderService
+  ] = useState<google.maps.Geocoder>();
 
   useEffect((): void => {
     loadGoogleMapsAPI({
@@ -31,6 +36,7 @@ const useGoogleLocationAutocomplete = (GoogleMapsAPIKey: string): useGoogleLocat
       .then(googleMaps => {
         setSessionToken(new googleMaps.places.AutocompleteSessionToken());
         setAutocompleteService(new googleMaps.places.AutocompleteService());
+        setGeocoderService(new googleMaps.Geocoder());
       });
   }, []);
 
@@ -48,6 +54,17 @@ const useGoogleLocationAutocomplete = (GoogleMapsAPIKey: string): useGoogleLocat
           }
         }
       );
+    },
+    geocode: (request) => {
+      return new Promise(
+        (resolve): void => {
+          if (!geocoderService) {
+            resolve([]);
+          } else {
+            geocoderService.geocode(request, resolve)
+          }
+        }
+      )
     }
   };
 };
