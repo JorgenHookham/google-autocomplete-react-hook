@@ -16,7 +16,7 @@ The hook accepts an API key and will return a function that you can use to make 
 The returned getPlacePredictions function accepts an [AutocompletionRequest](https://developers.google.com/maps/documentation/javascript/reference/places-autocomplete-service#AutocompletionRequest)
 and returns a promise-wrapped list of [AutocompletePrediction](https://developers.google.com/maps/documentation/javascript/reference/places-autocomplete-service#AutocompletePrediction).
 
-The returned geocode function accepts an [GeocoderRequest](https://developers.google.com/maps/documentation/javascript/reference/geocoder#GeocoderRequest)
+The returned geocode function accepts a [GeocoderRequest](https://developers.google.com/maps/documentation/javascript/reference/geocoder#GeocoderRequest)
 and returns a promise-wrapped list of [GeocoderResult](https://developers.google.com/maps/documentation/javascript/reference/geocoder#GeocoderResult)
 
 **Basic Example**
