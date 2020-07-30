@@ -1,3 +1,6 @@
 /// <reference types="googlemaps" />
-declare const useGoogleLocationAutocomplete: (GoogleMapsAPIKey: string) => (request: google.maps.places.AutocompletionRequest) => Promise<google.maps.places.AutocompletePrediction[]>;
+interface useGoogleLocationAutocompleteReturn {
+    getPlacePredictions: (request: google.maps.places.AutocompletionRequest) => Promise<google.maps.places.AutocompletePrediction[]>;
+}
+declare const useGoogleLocationAutocomplete: (GoogleMapsAPIKey: string) => useGoogleLocationAutocompleteReturn;
 export default useGoogleLocationAutocomplete;

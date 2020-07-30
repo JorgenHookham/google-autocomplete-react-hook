@@ -22,15 +22,17 @@ const useGoogleLocationAutocomplete = (GoogleMapsAPIKey) => {
             setAutocompleteService(new googleMaps.places.AutocompleteService());
         });
     }, []);
-    return (request) => {
-        return new Promise((resolve) => {
-            if (!autocompleteService || !sessionToken) {
-                resolve([]);
-            }
-            else {
-                autocompleteService.getPlacePredictions(Object.assign({}, request, { sessionToken }), resolve);
-            }
-        });
+    return {
+        getPlacePredictions: (request) => {
+            return new Promise((resolve) => {
+                if (!autocompleteService || !sessionToken) {
+                    resolve([]);
+                }
+                else {
+                    autocompleteService.getPlacePredictions(Object.assign({}, request, { sessionToken }), resolve);
+                }
+            });
+        }
     };
 };
 exports.default = useGoogleLocationAutocomplete;

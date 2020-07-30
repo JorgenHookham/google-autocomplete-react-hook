@@ -4,9 +4,11 @@ import {
   MissingAPIKeyError
 } from "./errors";
 
-const useGoogleLocationAutocomplete = (GoogleMapsAPIKey: string): (
-  (request: google.maps.places.AutocompletionRequest) => Promise<google.maps.places.AutocompletePrediction[]>
-) => {
+interface useGoogleLocationAutocompleteReturn {
+  getPlacePredictions: (request: google.maps.places.AutocompletionRequest) => Promise<google.maps.places.AutocompletePrediction[]>;
+}
+
+const useGoogleLocationAutocomplete = (GoogleMapsAPIKey: string): useGoogleLocationAutocompleteReturn => {
 
   if (typeof GoogleMapsAPIKey !== "string") {
     throw new MissingAPIKeyError();
@@ -32,20 +34,23 @@ const useGoogleLocationAutocomplete = (GoogleMapsAPIKey: string): (
       });
   }, []);
 
-  return (request) => {
-    return new Promise(
-      (resolve): void => {
-        if (!autocompleteService || !sessionToken) {
-          resolve([]);
-        } else {
-          autocompleteService.getPlacePredictions(
-            Object.assign({}, request, {sessionToken}),
-            resolve
-          );
+  return {
+    getPlacePredictions: (request) => {
+      return new Promise(
+        (resolve): void => {
+          if (!autocompleteService || !sessionToken) {
+            resolve([]);
+          } else {
+            autocompleteService.getPlacePredictions(
+              Object.assign({}, request, {sessionToken}),
+              resolve
+            );
+          }
         }
-      }
-    );
+      );
+    }
   };
 };
+
 
 export default useGoogleLocationAutocomplete;
