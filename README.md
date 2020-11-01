@@ -13,8 +13,11 @@ yarn add google-autocomplete-react-hook
 
 The hook accepts an API key and will return a function that you can use to make autocompletion requests to Google's API.
 
-The returned function accepts an [AutocompletionRequest](https://developers.google.com/maps/documentation/javascript/reference/places-autocomplete-service#AutocompletionRequest)
+The returned getPlacePredictions function accepts an [AutocompletionRequest](https://developers.google.com/maps/documentation/javascript/reference/places-autocomplete-service#AutocompletionRequest)
 and returns a promise-wrapped list of [AutocompletePrediction](https://developers.google.com/maps/documentation/javascript/reference/places-autocomplete-service#AutocompletePrediction).
+
+The returned geocode function accepts a [GeocoderRequest](https://developers.google.com/maps/documentation/javascript/reference/geocoder#GeocoderRequest)
+and returns a promise-wrapped list of [GeocoderResult](https://developers.google.com/maps/documentation/javascript/reference/geocoder#GeocoderResult)
 
 **Basic Example**
 
@@ -22,8 +25,12 @@ and returns a promise-wrapped list of [AutocompletePrediction](https://developer
 import useGoogleLocationAutocomplete from "google-autocomplete-react-hook";
 
 const MyComponent: React.FC = () => {
-  const locationAutocomplete = useGoogleLocationAutocomplete("mygoogleapikey");
-  locationAutocomplete({input: "Calif"}).then(console.log);
+  const { getPlacePredictions, geocode } = useGoogleLocationAutocomplete("mygoogleapikey");
+  getPlacePredictions({input: "Calif"}).then(results => {
+    results.map(r => {
+      geocode({placeId: r.place_id}, console.log)
+    })
+  });
 }
 ```
 

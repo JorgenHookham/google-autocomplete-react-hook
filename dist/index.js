@@ -12,6 +12,7 @@ const useGoogleLocationAutocomplete = (GoogleMapsAPIKey) => {
     }
     const [sessionToken, setSessionToken] = react_1.useState();
     const [autocompleteService, setAutocompleteService] = react_1.useState();
+    const [geocoderService, setGeocoderService] = react_1.useState();
     react_1.useEffect(() => {
         load_google_maps_api_1.default({
             key: GoogleMapsAPIKey,
@@ -20,17 +21,30 @@ const useGoogleLocationAutocomplete = (GoogleMapsAPIKey) => {
             .then(googleMaps => {
             setSessionToken(new googleMaps.places.AutocompleteSessionToken());
             setAutocompleteService(new googleMaps.places.AutocompleteService());
+            setGeocoderService(new googleMaps.Geocoder());
         });
     }, []);
-    return (request) => {
-        return new Promise((resolve) => {
-            if (!autocompleteService || !sessionToken) {
-                resolve([]);
-            }
-            else {
-                autocompleteService.getPlacePredictions(Object.assign({}, request, { sessionToken }), resolve);
-            }
-        });
+    return {
+        getPlacePredictions: (request) => {
+            return new Promise((resolve) => {
+                if (!autocompleteService || !sessionToken) {
+                    resolve([]);
+                }
+                else {
+                    autocompleteService.getPlacePredictions(Object.assign({}, request, { sessionToken }), resolve);
+                }
+            });
+        },
+        geocode: (request) => {
+            return new Promise((resolve) => {
+                if (!geocoderService) {
+                    resolve([]);
+                }
+                else {
+                    geocoderService.geocode(request, resolve);
+                }
+            });
+        }
     };
 };
 exports.default = useGoogleLocationAutocomplete;

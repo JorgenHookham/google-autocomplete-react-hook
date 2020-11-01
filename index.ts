@@ -4,9 +4,12 @@ import {
   MissingAPIKeyError
 } from "./errors";
 
-const useGoogleLocationAutocomplete = (GoogleMapsAPIKey: string): (
-  (request: google.maps.places.AutocompletionRequest) => Promise<google.maps.places.AutocompletePrediction[]>
-) => {
+interface useGoogleLocationAutocompleteReturn {
+  getPlacePredictions: (request: google.maps.places.AutocompletionRequest) => Promise<google.maps.places.AutocompletePrediction[]>
+  geocode: (request: google.maps.GeocoderRequest) => Promise<google.maps.GeocoderResult[]>
+}
+
+const useGoogleLocationAutocomplete = (GoogleMapsAPIKey: string): useGoogleLocationAutocompleteReturn => {
 
   if (typeof GoogleMapsAPIKey !== "string") {
     throw new MissingAPIKeyError();
@@ -20,6 +23,10 @@ const useGoogleLocationAutocomplete = (GoogleMapsAPIKey: string): (
     autocompleteService,
     setAutocompleteService
   ] = useState<google.maps.places.AutocompleteService>();
+  const [
+    geocoderService,
+    setGeocoderService
+  ] = useState<google.maps.Geocoder>();
 
   useEffect((): void => {
     loadGoogleMapsAPI({
@@ -29,23 +36,38 @@ const useGoogleLocationAutocomplete = (GoogleMapsAPIKey: string): (
       .then(googleMaps => {
         setSessionToken(new googleMaps.places.AutocompleteSessionToken());
         setAutocompleteService(new googleMaps.places.AutocompleteService());
+        setGeocoderService(new googleMaps.Geocoder());
       });
   }, []);
 
-  return (request) => {
-    return new Promise(
-      (resolve): void => {
-        if (!autocompleteService || !sessionToken) {
-          resolve([]);
-        } else {
-          autocompleteService.getPlacePredictions(
-            Object.assign({}, request, {sessionToken}),
-            resolve
-          );
+  return {
+    getPlacePredictions: (request) => {
+      return new Promise(
+        (resolve): void => {
+          if (!autocompleteService || !sessionToken) {
+            resolve([]);
+          } else {
+            autocompleteService.getPlacePredictions(
+              Object.assign({}, request, {sessionToken}),
+              resolve
+            );
+          }
         }
-      }
-    );
+      );
+    },
+    geocode: (request) => {
+      return new Promise(
+        (resolve): void => {
+          if (!geocoderService) {
+            resolve([]);
+          } else {
+            geocoderService.geocode(request, resolve)
+          }
+        }
+      )
+    }
   };
 };
+
 
 export default useGoogleLocationAutocomplete;
